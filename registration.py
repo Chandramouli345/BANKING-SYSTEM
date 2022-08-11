@@ -5,10 +5,10 @@ import tkinter.messagebox as msg
 import random
 import mysql.connector
 class Gui:
-   def __init__(self):
-        Mainpage=Tk()
-        Mainpage.title("BANK LOGIN")
-        Mainpage.geometry("1550x800+0+0")
+   def __init__(self,Mainpage):
+        self.Mainpage=Mainpage
+        self.Mainpage.title("BANK LOGIN")
+        self.Mainpage.geometry("1550x800+0+0")
         bg=ImageTk.PhotoImage(file="BGImage.jpg")
         Lbl_bg=Label(Mainpage,image=bg)
         Lbl_bg.place(x=0,y=0,relwidth=1,relheight=1)
@@ -47,16 +47,15 @@ class Gui:
         lognbutn.place(x=120,y=300,width=80,height=35)
 #========================== Registration Button ====================================
 
-        regbutn = Button(frame,text="Register Here",font=("times new roman",12,"bold"),borderwidth=0,
-                         fg="black",bg="lightblue",activeforeground="white",activebackground="red",command=self.reg)
-        regbutn.place(x=10, y=350, width=160)
+        regbutn = Button(frame,text="Register Here",font=("times new roman",10,"bold"),borderwidth=0,
+                         fg="black",bg="lightblue",command=self.reg)
+        regbutn.place(x=5, y=350, width=160)
 
 #================================== forgotpasswrd==========================================
 
-        pwdbutn = Button(frame, text="Register Here", font=("times new roman", 12, "bold"), borderwidth=0,
-                         fg="black",bg="lightblue", activeforeground="white", activebackground="red")
+        pwdbutn = Button(frame, text="Forgot Password?", font=("times new roman", 10, "bold"), borderwidth=0,
+                         fg="black",bg="lightblue")
         pwdbutn.place(x=10, y=380, width=160)
-
 
         Mainpage.mainloop()
 
@@ -88,17 +87,54 @@ class Gui:
         self.e_p = Entry(regpage)
         self.e_p.place(x=200, y=400)
 
-        b1=Button(regpage,text="SUBMIT",command=self.mou)
+        b1=Button(regpage,text="SUBMIT",command=self.validation)
         b1.place(x=200,y=450)
 
+        regpage.mainloop()
+#========================== VAlidating Entry fields=========================
+
+   def validation(self):
+        if self.e_n.get()=="":
+             msg.showerror('Error','Please enter your name',parent=self.Mainpage)
+        elif self.e_m.get()=="" or len(self.e_m.get())!=10:
+             msg.showerror('Error','Please enter your mobile',parent=self.Mainpage)
+        elif self.e_g.get()=="":
+             msg.showerror('Error','Please enter your email',parent=self.Mainpage)
+        elif self.e_p.get()=="":
+             msg.showerror('Error','Please enter your password',parent=self.Mainpage)
+
 #================================ Acoount number generation=========================
-   def mou(self):
-        tk=Tk()
-        list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        number = ""
-        b1=Label(tk,text="")
-        b1.place(x=10,y=10)
-        for i in range(12):
-             number = number + random.choice(list)
-             b1.config(text=number)
-s=Gui()
+        else:
+             tk = Tk()
+             list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+             number = ""
+             b1 = Label(tk, text="")
+             b1.place(x=10, y=10)
+             for i in range(12):
+                  number = number + random.choice(list)
+                  b1.config(text=number)
+
+#============================= connecting to sql===============================================
+   def connect(self):
+        mydb=mysql.connector.connect(host="localhost",user="root",port=3306,password="M",database="Bookstore")
+        mycursor=mydb.cursor()
+        Name=self.e_n.get()
+        Mobilenumber=self.e_m.get()
+        email=self.e_g.get()
+        password=self.e_p.get()
+        mycursor.execute("insert into storage values(%s,%s,%s,%s)",(Name,Mobilenumber,email,password))
+        mydb.commit()
+        msg.showinfo("registration","Registration Successful")
+
+
+
+
+
+
+
+
+if __name__=='__main__':
+     Mainpage=Tk()
+     s=Gui(Mainpage)
+     Mainpage.mainloop()
+
