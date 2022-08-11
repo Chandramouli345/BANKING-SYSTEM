@@ -2,6 +2,7 @@ from tkinter import*
 from tkinter import ttk
 from PIL import Image,ImageTk
 import tkinter.messagebox as msg
+import random
 import mysql.connector
 class Gui:
    def __init__(self):
@@ -47,10 +48,10 @@ class Gui:
 #========================== Registration Button ====================================
 
         regbutn = Button(frame,text="Register Here",font=("times new roman",12,"bold"),borderwidth=0,
-                         fg="black",bg="lightblue",activeforeground="white",activebackground="red")
+                         fg="black",bg="lightblue",activeforeground="white",activebackground="red",command=self.reg)
         regbutn.place(x=10, y=350, width=160)
 
-#====================== forgotpasswrd==========================================
+#================================== forgotpasswrd==========================================
 
         pwdbutn = Button(frame, text="Register Here", font=("times new roman", 12, "bold"), borderwidth=0,
                          fg="black",bg="lightblue", activeforeground="white", activebackground="red")
@@ -58,4 +59,46 @@ class Gui:
 
 
         Mainpage.mainloop()
+
+#======================= registration page =============================================================================
+
+   def reg(self):
+        regpage = Tk()
+        regpage.title("Registration page")
+        regpage.geometry("400x500")
+        regpage.config(bg="lightblue")
+
+        c1=Label(regpage,text="Name")
+        c1.place(x=50,y=100)
+        self.e_n=Entry(regpage)
+        self.e_n.place(x=200,y=100)
+
+        c2 = Label(regpage, text="Mobile number")
+        c2.place(x=50, y=200)
+        self.e_m = Entry(regpage)
+        self.e_m.place(x=200, y=200)
+
+        c3 = Label(regpage, text="Email Id ")
+        c3.place(x=50, y=300)
+        self.e_g = Entry(regpage)
+        self.e_g.place(x=200, y=300)
+
+        c4 = Label(regpage, text="Password")
+        c4.place(x=50, y=400)
+        self.e_p = Entry(regpage)
+        self.e_p.place(x=200, y=400)
+
+        b1=Button(regpage,text="SUBMIT",command=self.mou)
+        b1.place(x=200,y=450)
+
+#================================ Acoount number generation=========================
+   def mou(self):
+        tk=Tk()
+        list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        number = ""
+        b1=Label(tk,text="")
+        b1.place(x=10,y=10)
+        for i in range(12):
+             number = number + random.choice(list)
+             b1.config(text=number)
 s=Gui()
