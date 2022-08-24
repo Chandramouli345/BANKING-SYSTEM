@@ -119,7 +119,7 @@ class Gui:
 
 #============================= connecting to sql======================================================
    def connect(self):
-        mydb=mysql.connector.connect(host="localhost",user="root",port=3306,password="Mouli$345",database="Bank")
+        mydb=mysql.connector.connect(host="localhost",user="root",port=3306,password="",database="Bank")
         mycursor=mydb.cursor()
         Name=self.e_n.get()
         Mobilenumber=self.e_m.get()
@@ -137,7 +137,7 @@ class Gui:
              msg.showerror("Error", "All credentials required", parent=self.Mainpage)
         else:
              try:
-                  mydb = mysql.connector.connect(host="localhost", user="root", port=3306, password="Mouli$345",
+                  mydb = mysql.connector.connect(host="localhost", user="root", port=3306, password="",
                                                  database="Bank")
                   mycursor = mydb.cursor()
                   mycursor.execute("select * from registration where email=%s and Password=%s", (self.n_l.get(), self.a_l.get()))
