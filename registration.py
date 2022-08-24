@@ -13,7 +13,7 @@ class Gui:
         Lbl_bg=Label(Mainpage,image=bg)
         Lbl_bg.place(x=0,y=0,relwidth=1,relheight=1)
 
-#===========================================FRAME=============================
+#===========================================FRAME=====================================================
 
         frame=Frame(Mainpage,bg="lightblue")
         frame.place(x=510,y=170,width=340,height=450)
@@ -28,7 +28,7 @@ class Gui:
 
 #===================== username and password ========================
 
-        name=Label(frame,text="Username:",font=("times new roman",12,"bold"),fg="red",bg="lightblue")
+        name=Label(frame,text="Email ID:",font=("times new roman",12,"bold"),fg="red",bg="lightblue")
         name.place(x=10,y=200)
         self.n_l=Entry(frame)
         self.n_l.place(x=100,y=200)
@@ -43,7 +43,7 @@ class Gui:
         l_img=Image.open(r"login-button-png-5.png")
         l_img = l_img.resize((100, 100), Image.ANTIALIAS)
         png = ImageTk.PhotoImage(l_img)
-        lognbutn=Button(frame,image=png)
+        lognbutn=Button(frame,image=png,command=self.login)
         lognbutn.place(x=120,y=300,width=80,height=35)
 #========================== Registration Button ====================================
 
@@ -106,31 +106,48 @@ class Gui:
 #================================ Acoount number generation=========================
         else:
              tk = Tk()
+             b2 = Button(tk, text="OK", command=self.connect)
+             b2.place(x=10, y=30)
              list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-             number = ""
+             self.number = ""
              b1 = Label(tk, text="")
              b1.place(x=10, y=10)
-             for i in range(12):
-                  number = number + random.choice(list)
-                  b1.config(text=number)
+             for i in range(10):
+                  self.number = self.number + random.choice(list)
+                  b1.config(text=self.number)
 
-#============================= connecting to sql===============================================
+
+#============================= connecting to sql======================================================
    def connect(self):
-        mydb=mysql.connector.connect(host="localhost",user="root",port=3306,password="M",database="Bookstore")
+        mydb=mysql.connector.connect(host="localhost",user="root",port=3306,password="Mouli$345",database="Bank")
         mycursor=mydb.cursor()
         Name=self.e_n.get()
         Mobilenumber=self.e_m.get()
         email=self.e_g.get()
         password=self.e_p.get()
-        mycursor.execute("insert into storage values(%s,%s,%s,%s)",(Name,Mobilenumber,email,password))
+        number=self.number
+        mycursor.execute("insert into registration values(%s,%s,%s,%s,%s)",(Name,Mobilenumber,email,password,number))
         mydb.commit()
         msg.showinfo("registration","Registration Successful")
 
+#========================== Login validation==============================
 
-
-
-
-
+   def login(self):
+        if self.n_l.get() == "" or self.a_l.get() == "":
+             msg.showerror("Error", "All credentials required", parent=self.Mainpage)
+        else:
+             try:
+                  mydb = mysql.connector.connect(host="localhost", user="root", port=3306, password="Mouli$345",
+                                                 database="Bank")
+                  mycursor = mydb.cursor()
+                  mycursor.execute("select * from registration where email=%s and Password=%s", (self.n_l.get(), self.a_l.get()))
+                  row = mycursor.fetchone()
+                  if row == None:
+                       msg.showerror("Error", "Invalid credentials", parent=self.Mainpage)
+                  else:
+                       msg.showinfo("success", "Login Successful", parent=self.Mainpage)
+             except Exception as es:
+                  msg.showerror("Error", f"Error Due to: {str(es)}", parent=self.Mainpage)
 
 
 if __name__=='__main__':
